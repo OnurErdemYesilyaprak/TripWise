@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}TripWise{% endblock %}</title>
+    <style>
+        /* Basit navbar stilleri */
+        body { margin: 0; font-family: sans-serif; }
+        nav {
+            background-color: #0077b6;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .brand {
+            font-weight: bold;
+            font-size: 24px;
+        }
+        nav .menu {
+            display: flex;
+            gap: 20px;
+        }
+        nav .menu > div {
+            position: relative;
+        }
+        nav .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 30px;
+            background-color: white;
+            color: black;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+        nav .dropdown-content a {
+            color: black;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+        nav .menu > div:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="brand">TripWise</div>
+        <div class="menu">
+            {% for region in regions %}
+                <div>
+                    {{ region.name }}
+                    <div class="dropdown-content">
+                        {% for city in region.cities.all %}
+                            <a href="{% url 'city_detail' city.id %}">{{ city.name }}</a>
+                        {% empty %}
+                            <a>Şehir yok</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </nav>
+    
+<main style="padding: 20px;">
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

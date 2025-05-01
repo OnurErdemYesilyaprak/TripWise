@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ city.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ city.name }}</h1>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+
+    <!-- Gezilecek Yerler -->
+    <a href="{% url 'city_content_detail' city.id 'place' %}" style="text-decoration: none; color: inherit;">
+        <div style="flex: 1; min-width: 300px; background: #e0f7fa; padding: 20px; border-radius: 10px;">
+            <h2>Gezilecek Yerler</h2>
+            <ul>
+                <li>Örnek yer 1</li>
+            </ul>
+        </div>
+    </a>
+    
+
+    <!-- Yenilecek Yemekler -->
+    <a href="{% url 'city_content_detail' city.id 'food' %}" style="text-decoration: none; color: inherit;">
+        <div style="flex: 1; min-width: 300px; background: #e0f7fa; padding: 20px; border-radius: 10px;">
+            <h2>Yenilecek Yemekler</h2>
+            <ul>
+                <li>Örnek yemek 1</li>
+            </ul>
+        </div>
+    </a>
+    
+
+    <!-- Kalınacak Yerler -->
+    <a href="{% url 'city_content_detail' city.id 'stay' %}" style="text-decoration: none; color: inherit;">
+        <div style="flex: 1; min-width: 300px; background: #e0f7fa; padding: 20px; border-radius: 10px;">
+            <h2>Kalınacak Yerler</h2>
+            <ul>
+                <li>Örnek konaklama yeri 1</li>
+            </ul>
+        </div>
+    </a>
+    
+
+    <!-- Aktiviteler -->
+    <a href="{% url 'city_content_detail' city.id 'activity' %}" style="text-decoration: none; color: inherit;">
+        <div style="flex: 1; min-width: 300px; background: #e0f7fa; padding: 20px; border-radius: 10px;">
+            <h2>Aktiviteler</h2>
+            <ul>
+                <li>Örnek aktivite 1</li>
+            </ul>
+        </div>
+    </a>
+    
+
+</div>
+{% endblock %}
+
