@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Navbar -->
+<nav class="bg-blue-950 shadow-sm">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+            <a href="{% url 'home' %}" class="text-2xl font-bold" style="color: tan;">
+                TripWise
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Content -->
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-8">{{ city.name }} Yemek Mekanları</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {% for food in foods %}
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+            {% if food.image_url %}
+            <img src="{{ food.image_url }}" 
+                 alt="{{ food.name }}" 
+                 class="w-full h-48 object-cover">
+            {% endif %}
+            <div class="p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-semibold text-gray-800">{{ food.name }}</h3>
+                    {% if food.rating %}
+                    <span class="text-yellow-500">
+                        <i class="fas fa-star"></i> {{ food.rating }}
+                    </span>
+                    {% endif %}
+                </div>
+                {% if food.address %}
+                <p class="text-gray-600 mb-4">
+                    <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>
+                    {{ food.address }}
+                </p>
+                {% endif %}
+                {% if food.website %}
+                <a href="{{ food.website }}" target="_blank" 
+                   class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-external-link-alt mr-2"></i>
+                    Web Sitesi
+                </a>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-12">
+            <i class="fas fa-utensils text-4xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600 text-lg">Bu şehir için henüz yemek mekanı bilgisi bulunmamaktadır.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

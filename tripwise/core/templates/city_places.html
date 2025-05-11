@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ city.name }} - Gezilecek Yerler{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-gradient h-[300px] flex items-center justify-center text-white">
+    <div class="text-center px-4">
+        <h1 class="text-4xl font-bold mb-4">{{ city.name }}</h1>
+        <p class="text-xl">Gezilecek Yerler</p>
+    </div>
+</section>
+
+<!-- Places Grid -->
+<section class="py-16 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for place in places %}
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
+                {% if place.photo_url %}
+                    <img src="{{ place.photo_url }}" alt="{{ place.name }}" class="w-full h-64 object-cover">
+                {% else %}
+                    <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-gray-400"></i>
+                    </div>
+                {% endif %}
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-2">{{ place.name }}</h3>
+                    {% if place.description %}
+                        <p class="text-gray-600 mb-4">{{ place.description|truncatewords:20 }}</p>
+                    {% endif %}
+                    <div class="flex items-center justify-between">
+                        <span class="text-sm text-gray-500">
+                            <i class="fas fa-map-marker-alt mr-2"></i>{{ place.address|default:"Adres bilgisi yok" }}
+                        </span>
+                        {% if place.rating %}
+                            <span class="flex items-center text-yellow-500">
+                                <i class="fas fa-star mr-1"></i>
+                                {{ place.rating }}
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <i class="fas fa-map-marked-alt text-4xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600 text-lg">Bu şehir için henüz gezilecek yer eklenmemiş.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %} 

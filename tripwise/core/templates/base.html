@@ -2,73 +2,35 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}TripWise{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}TripWise - Gezi Rehberi{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Basit navbar stilleri */
-        body { margin: 0; font-family: sans-serif; }
-        nav {
-            background-color: #0077b6;
-            color: white;
-            padding: 10px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        body {
+            font-family: 'Poppins', sans-serif;
         }
-        nav .brand {
-            font-weight: bold;
-            font-size: 24px;
-        }
-        nav .menu {
-            display: flex;
-            gap: 20px;
-        }
-        nav .menu > div {
-            position: relative;
-        }
-        nav .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 30px;
-            background-color: white;
-            color: black;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
-            z-index: 1;
-        }
-        nav .dropdown-content a {
-            color: black;
-            padding: 10px;
-            text-decoration: none;
-            display: block;
-        }
-        nav .menu > div:hover .dropdown-content {
-            display: block;
+        .hero-gradient {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3');
+            background-size: cover;
+            background-position: center;
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-50">
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 
-    <nav>
-        <div class="brand">TripWise</div>
-        <div class="menu">
-            {% for region in regions %}
-                <div>
-                    {{ region.name }}
-                    <div class="dropdown-content">
-                        {% for city in region.cities.all %}
-                            <a href="{% url 'city_detail' city.id %}">{{ city.name }}</a>
-                        {% empty %}
-                            <a>Şehir yok</a>
-                        {% endfor %}
-                    </div>
-                </div>
-            {% endfor %}
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-5 py-8">
+            <div class="border-t border-gray-800 mt-4 pt-4 text-center text-gray-400">
+                <p>&copy; 2025 TripWise. Tüm hakları saklıdır.</p>
+            </div>
         </div>
-    </nav>
-    
-<main style="padding: 20px;">
-    {% block content %}{% endblock %}
-</main>
-
+    </footer>
 </body>
 </html>

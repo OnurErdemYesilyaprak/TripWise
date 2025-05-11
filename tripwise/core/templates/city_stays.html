@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- Navbar -->
+<nav class="bg-blue-950 shadow-sm">
+    <div class="container mx-auto px-4 py-3">
+        <div class="flex items-center justify-between">
+            <a href="{% url 'home' %}" class="text-2xl font-bold" style="color: tan;">
+                TripWise
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">{{ city.name }} Konaklama Yerleri</h1>
+        <p class="text-gray-600 mt-2">Şehirdeki en iyi otel ve konaklama seçenekleri</p>
+    </div>
+
+    <!-- Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for stay in stays %}
+        <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+            <!-- Image -->
+            {% if stay.image_url %}
+            <img src="{{ stay.image_url }}" 
+                 alt="{{ stay.name }}" 
+                 class="w-full h-48 object-cover">
+            {% else %}
+            <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                <i class="fas fa-hotel text-4xl text-gray-400"></i>
+            </div>
+            {% endif %}
+
+            <!-- Content -->
+            <div class="p-4">
+                <!-- Title and Rating -->
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="text-xl font-semibold text-gray-800">{{ stay.name }}</h3>
+                    {% if stay.rating %}
+                    <span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-sm">
+                        <i class="fas fa-star"></i> {{ stay.rating }}
+                    </span>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                {% if stay.description %}
+                <p class="text-gray-600 text-sm mb-3">{{ stay.description|truncatewords:30 }}</p>
+                {% endif %}
+
+                <!-- Address -->
+                {% if stay.address %}
+                <div class="flex items-start space-x-2 mb-2">
+                    <i class="fas fa-map-marker-alt text-gray-400 mt-1"></i>
+                    <p class="text-gray-600 text-sm">{{ stay.address }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Phone -->
+                {% if stay.phone %}
+                <div class="flex items-center space-x-2 mb-2">
+                    <i class="fas fa-phone text-gray-400"></i>
+                    <p class="text-gray-600 text-sm">{{ stay.phone }}</p>
+                </div>
+                {% endif %}
+
+                <!-- Website -->
+                {% if stay.website %}
+                <div class="mt-4">
+                    <a href="{{ stay.website }}" 
+                       target="_blank" 
+                       class="inline-flex items-center text-blue-600 hover:text-blue-800">
+                        <i class="fas fa-external-link-alt mr-2"></i>
+                        <span>Web Sitesi</span>
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-span-3">
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+                <i class="fas fa-info-circle text-blue-500 text-3xl mb-3"></i>
+                <p class="text-blue-700">Bu şehir için henüz konaklama yeri bilgisi bulunmamaktadır.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

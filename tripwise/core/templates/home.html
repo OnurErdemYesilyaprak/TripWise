@@ -1,8 +1,135 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}Anasayfa - TripWise{% endblock %}
+{% block title %}TripWise - Gezi Rehberi{% endblock %}
 
 {% block content %}
-    <h1>İstanbul</h1>
-    <p>Türkiye'nin en büyük ve en önemli şehirlerinden biri olan İstanbul hakkında bilgiler burada yer alacak.</p>
+<!-- Hero Section -->
+<section class="hero-gradient h-[500px] flex items-center justify-center text-white relative">
+    <!-- Hakkımızda Button -->
+    <a href="{% url 'about' %}" class="absolute top-6 right-8 px-6 py-2 bg-blue-950 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-colors z-10">
+        <i class="fas fa-info-circle mr-2"></i>Hakkımızda
+    </a>
+    <div class="text-center px-4">
+        <h1 class="text-5xl font-bold mb-6">TripWise</h1>
+        <p class="text-xl mb-8">Unutulmaz anılar biriktirmek için yeni lokasyonlar keşfedin</p>
+        
+        <!-- Search Form -->
+        <form method="GET" action="{% url 'home' %}" class="max-w-3xl mx-auto">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" name="search" value="{{ request.GET.search }}" 
+                       class="flex-1 px-6 py-4 rounded-lg text-gray-800 text-lg"
+                       placeholder="Nereyi keşfetmek istersiniz?">
+                <select name="region" class="px-6 py-4 rounded-lg text-gray-800 text-lg">
+                    <option value="">Tüm Bölgeler</option>
+                    {% for region in regions %}
+                    <option value="{{ region.name }}" {% if request.GET.region == region.name %}selected{% endif %}>
+                        {{ region.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="px-8 py-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-lg font-semibold">
+                    <i class="fas fa-search mr-2"></i>Ara
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<!-- Featured Destinations -->
+{% if featured_cities %}
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Öne Çıkan Destinasyonlar</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for city in featured_cities %}
+            <div class="group relative overflow-hidden rounded-xl shadow-lg">
+                {% if city.photo_url %}
+                    <img src="{{ city.photo_url }}" 
+                         alt="{{ city.name }}" 
+                         class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3" 
+                         alt="{{ city.name }}" 
+                         class="w-full h-64 object-cover transform group-hover:scale-110 transition-transform duration-300">
+                {% endif %}
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h3 class="text-2xl font-bold mb-2">{{ city.name }}</h3>
+                    <p class="text-gray-200 mb-4">{{ city.description|default:"Bu şehir hakkında detaylı bilgi için tıklayın."|truncatewords:20 }}</p>
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <a href="{% url 'city_places' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                            <i class="fas fa-map-marker-alt text-xl mb-1"></i>
+                            <span class="text-xs">Gezilecek Yerler</span>
+                        </a>
+                        <a href="{% url 'city_foods' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                            <i class="fas fa-utensils text-xl mb-1"></i>
+                            <span class="text-xs">Yemekler</span>
+                        </a>
+                        <a href="{% url 'city_stays' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-white/20 rounded-lg hover:bg-white/30 transition-colors">
+                            <i class="fas fa-bed text-xl mb-1"></i>
+                            <span class="text-xs">Konaklama</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- All Destinations -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8">Tüm Lokasyonlar</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for city in cities %}
+            <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                {% if city.photo_url %}
+                    <img src="{{ city.photo_url }}" 
+                         alt="{{ city.name }}" 
+                         class="w-full h-48 object-cover">
+                {% else %}
+                    <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3" 
+                         alt="{{ city.name }}" 
+                         class="w-full h-48 object-cover">
+                {% endif %}
+                <div class="p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold text-gray-800">{{ city.name }}</h3>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-600 rounded-full text-sm">{{ city.region.name }}</span>
+                    </div>
+                    <p class="text-gray-600 mb-4">{{ city.description|default:"Bu şehir hakkında detaylı bilgi için tıklayın."|truncatewords:15 }}</p>
+                    <div class="grid grid-cols-3 gap-2 mt-4">
+                        <a href="{% url 'city_places' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-map-marker-alt text-xl mb-1 text-blue-600"></i>
+                            <span class="text-xs text-gray-600">Gezilecek Yerler</span>
+                        </a>
+                        <a href="{% url 'city_foods' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-utensils text-xl mb-1 text-blue-600"></i>
+                            <span class="text-xs text-gray-600">Yemekler</span>
+                        </a>
+                        <a href="{% url 'city_stays' city.slug %}" 
+                           class="flex flex-col items-center justify-center p-2 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                            <i class="fas fa-bed text-xl mb-1 text-blue-600"></i>
+                            <span class="text-xs text-gray-600">Konaklama</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-3 text-center py-12">
+                <i class="fas fa-search text-4xl text-gray-400 mb-4"></i>
+                <p class="text-gray-600 text-lg">Arama kriterlerinize uygun şehir bulunamadı.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

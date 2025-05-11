@@ -1,12 +1,16 @@
 from django.shortcuts import render, get_object_or_404
-from .models import City
+from .models import City,Place,PlacePhoto
 
-def city_detail(request, city_id):
-    city = get_object_or_404(City, id=city_id)
-    return render(request, 'city_detail.html', {'city': city})
+def city_detail(request, slug):
+    city = City.objects.get(slug=slug)
+    places = Place.objects.filter(city=city).prefetch_related('photos')
+    return render(request, 'city_detail.html', {
+        'city': city,
+        'places': places
+    })
 
-def city_content_detail(request, city_id, content_type):
-    city = get_object_or_404(City, id=city_id)
+def city_content_detail(request, slug, content_type):
+    city = get_object_or_404(City, slug=slug)
 
     titles = {
         'place': 'Gezilecek Yerler',
