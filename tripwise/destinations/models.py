@@ -29,31 +29,25 @@ class City(models.Model):
     def __str__(self):
         return self.name
 
+
 class Place(models.Model):
     city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='places')
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
-    opentripmap_id = models.CharField(max_length=255, unique=True, null=True, blank=True)
-    rating = models.FloatField(default=0)
-    review_count = models.IntegerField(default=0)
-    category = models.CharField(max_length=100, blank=True, null=True)
-    subcategory = models.CharField(max_length=100, blank=True, null=True)
-    price_tier = models.CharField(max_length=50, blank=True, null=True)
-    website = models.URLField(blank=True, null=True)
-    phone = models.CharField(max_length=50, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    latitude = models.FloatField(default=0)
-    longitude = models.FloatField(default=0)
-    hours = models.JSONField(default=dict, blank=True, null=True)
-    #created_at = models.DateTimeField(auto_now_add=True)
-    #updated_at = models.DateTimeField(auto_now=True)
+    address = models.CharField(max_length=500, blank=True, null=True)
 
     def __str__(self):
         return f"{self.name} - {self.city.name}"
-    
+
+ 
+
 class PlacePhoto(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE, related_name='photos')
-    photo_url = models.URLField()
+    photo_url = models.URLField(max_length=500)
+    
+
+    def __str__(self):
+        return f"Photo for {self.place.name}"
 
 class Food(models.Model):
     city = models.ForeignKey(City, related_name='foods', on_delete=models.CASCADE)
@@ -67,8 +61,8 @@ class Food(models.Model):
     phone = models.CharField(max_length=20, blank=True, null=True)
     website = models.URLField(blank=True, null=True)
     categories = models.JSONField(default=list, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    #created_at = models.DateTimeField(auto_now_add=True)
+    #updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return self.name
