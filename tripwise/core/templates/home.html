@@ -6,14 +6,12 @@
 {% block content %}
 <!-- Hero Section -->
 <section class="hero-gradient h-[500px] flex items-center justify-center text-white relative">
-    <!-- Hakkımızda Button -->
     <a href="{% url 'about' %}" class="absolute top-6 right-8 px-6 py-2 bg-blue-950 text-white font-semibold rounded-lg shadow hover:bg-blue-700 transition-colors z-10">
         <i class="fas fa-info-circle mr-2"></i>Hakkımızda
     </a>
     <div class="text-center px-4">
         <h1 class="text-5xl font-bold mb-6">TripWise</h1>
         <p class="text-xl mb-8">Unutulmaz anılar biriktirmek için yeni lokasyonlar keşfedin</p>
-        
         <!-- Search Form -->
         <form method="GET" action="{% url 'home' %}" class="max-w-3xl mx-auto">
             <div class="flex flex-col md:flex-row gap-4">

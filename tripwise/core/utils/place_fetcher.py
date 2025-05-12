@@ -1,18 +1,15 @@
 import requests
 from django.conf import settings
-from destinations.models import Place, PlacePhoto, Food, City, Stay
+from destinations.models import Place, PlacePhoto, Food, Stay
 from urllib.parse import quote
 import time
 from django.http import JsonResponse
-import re
 
 
 def fetch_places_for_city(city_name, city_object):
-    """
-    Google Places API'den şehir için gezilecek yerleri çeker ve veritabanına kaydeder.
-    """
+   
     try:
-        # Şehirdeki gezilecek yerleri çek
+
         search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         search_params = {
             "query": f"tourist attractions in {city_name}, Turkey",
@@ -36,12 +33,12 @@ def fetch_places_for_city(city_name, city_object):
         skipped_places = 0
         
         for place in search_data.get("results", []):
-            # Eğer bu yer zaten kayıtlıysa atla
+            
             if Place.objects.filter(name=place["name"], city=city_object).exists():
                 skipped_places += 1
                 continue
                 
-            # Detaylı bilgileri al
+            
             details_url = "https://maps.googleapis.com/maps/api/place/details/json"
             details_params = {
                 "place_id": place["place_id"],
@@ -55,12 +52,12 @@ def fetch_places_for_city(city_name, city_object):
                 
             details = details_response.json().get("result", {})
             
-            # Fotoğraf kontrolü
+            
             if not details.get("photos"):
                 skipped_places += 1
                 continue
             
-            # Yeni Place nesnesi oluştur
+           
             place_obj = Place(
                 city=city_object,
                 name=details.get('name', ''),
@@ -69,7 +66,7 @@ def fetch_places_for_city(city_name, city_object):
             )
             place_obj.save()
             
-            # Fotoğrafları kaydet (en fazla 5 fotoğraf)
+            
             for photo in details.get('photos', [])[:5]:
                 photo_url = f"https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference={photo['photo_reference']}&key={settings.GOOGLE_PLACES_API_KEY}"
                 PlacePhoto.objects.create(
@@ -79,7 +76,6 @@ def fetch_places_for_city(city_name, city_object):
             
             saved_places += 1
             
-            # API rate limit'ini aşmamak için bekle
             time.sleep(0.5)
             
         print(f"\n{city_name} için işlem tamamlandı:")
@@ -95,9 +91,7 @@ def fetch_places_for_city(city_name, city_object):
         return False
 
 def fetch_foods_for_city(city_name, city):
-    """
-    Google Places API'den şehir için yemek mekanlarını çeker ve veritabanına kaydeder.
-    """
+   
     
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
     params = {
@@ -107,14 +101,14 @@ def fetch_foods_for_city(city_name, city):
     }
 
     try:
-        # API isteği
+        
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
 
         
         for place in data.get("results", []):
-            # Eğer bu işletme zaten kayıtlıysa atla
+            
             if Food.objects.filter(place_id=place["place_id"]).exists():
                 continue
 
@@ -157,10 +151,7 @@ def fetch_foods_for_city(city_name, city):
         return False
 
 def fetch_stays_for_city(city_name, city):
-    """
-    Google Places API'den şehir için konaklama yerlerini çeker ve veritabanına kaydeder.
-    """
-    # API endpoint ve parametreler
+   
     url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
     params = {
         "query": f"hotels in {city_name}, Turkey",
@@ -169,18 +160,18 @@ def fetch_stays_for_city(city_name, city):
     }
 
     try:
-        # API isteği
+       
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
 
-        # Her bir işletme için
+        
         for place in data.get("results", []):
-            # Eğer bu işletme zaten kayıtlıysa atla
+            
             if Stay.objects.filter(place_id=place["place_id"]).exists():
                 continue
 
-            # Detaylı bilgileri al
+            
             details_url = "https://maps.googleapis.com/maps/api/place/details/json"
             details_params = {
                 "place_id": place["place_id"],
@@ -193,7 +184,7 @@ def fetch_stays_for_city(city_name, city):
             details_response.raise_for_status()
             details = details_response.json().get("result", {})
 
-            # Yeni Stay nesnesi oluştur
+           
             stay = Stay(
                 city=city,
                 name=place["name"],
@@ -209,7 +200,7 @@ def fetch_stays_for_city(city_name, city):
             )
             stay.save()
 
-            # API rate limit'ini aşmamak için bekle
+            
             time.sleep(0.5)
 
         return True
