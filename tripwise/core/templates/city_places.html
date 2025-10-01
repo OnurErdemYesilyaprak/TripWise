@@ -18,8 +18,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             {% for place in places %}
             <div class="bg-white rounded-xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
-                {% if place.photo_url %}
-                    <img src="{{ place.photo_url }}" alt="{{ place.name }}" class="w-full h-64 object-cover">
+                {% if place.photos.all %}
+                    <img src="{{ place.photos.first.photo_url }}" alt="{{ place.name }}" class="w-full h-64 object-cover">
                 {% else %}
                     <div class="w-full h-64 bg-gray-200 flex items-center justify-center">
                         <i class="fas fa-image text-4xl text-gray-400"></i>
