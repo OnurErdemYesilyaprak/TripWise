@@ -137,7 +137,7 @@ def fetch_foods_for_city(city_name, city):
                 address=details.get("formatted_address", ""),
                 phone=details.get("formatted_phone_number", ""),
                 website=details.get("website", ""),
-                categories=[place.get("types", [])]
+                categories=place.get("types", []),
             )
             food.save()
 
@@ -196,7 +196,7 @@ def fetch_stays_for_city(city_name, city):
                 address=details.get("formatted_address", ""),
                 phone=details.get("formatted_phone_number", ""),
                 website=details.get("website", ""),
-                types=[place.get("types", [])]
+                types=place.get("types", []),
             )
             stay.save()
 
